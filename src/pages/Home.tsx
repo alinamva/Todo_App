@@ -3,8 +3,6 @@ import quotes from "../constants/Quotes";
 import { motion } from "framer-motion";
 import {
   ArrowRightOnRectangleIcon,
-  PencilSquareIcon,
-  TrashIcon,
   UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
@@ -12,6 +10,7 @@ import { useEffect, useState } from "react";
 import Login from "../components/Login";
 import AddTodo from "../components/AddTodo";
 import EditTodo from "../components/EditTodo";
+import TodoList from "../components/TodoList";
 
 export interface HomeProps {
   loginForm: boolean;
@@ -36,14 +35,17 @@ const Home = () => {
   const [dropDown, setDropDown] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(-1);
+  const [showPulse, setShowPulse] = useState(false);
+
+  const [randomQuote, setRandomQuote] = useState(
+    quotes[Math.floor(Math.random() * quotes.length)]
+  );
 
   const handleLoginForm = () => {
     setLoginForm(true);
     setDropDown(false);
   };
-  const [randomQuote, setRandomQuote] = useState(
-    quotes[Math.floor(Math.random() * quotes.length)]
-  );
+
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
     if (storedUserName) {
@@ -69,7 +71,14 @@ const Home = () => {
     setTodos([]);
   };
   const handleTodoForm = () => {
-    setTodoForm(true);
+    if (!userName) {
+      setShowPulse(true);
+      setTimeout(() => {
+        setShowPulse(false);
+      }, 1000);
+    } else {
+      setTodoForm(true);
+    }
   };
 
   const handleDeleteTodo = (index: number) => {
@@ -132,24 +141,16 @@ const Home = () => {
         )}
       </header>
       {loginForm && (
-        <div className="fixed flex inset-0 bg-black/40  items-center justify-center">
-          <Login setLoginForm={setLoginForm} setUserName={setUserName} />
-        </div>
+        <Login setLoginForm={setLoginForm} setUserName={setUserName} />
       )}
-      {todoForm && (
-        <div className="fixed flex inset-0 bg-black/40  items-center justify-center">
-          <AddTodo setTodoForm={setTodoForm} setTodos={setTodos} />
-        </div>
-      )}
+      {todoForm && <AddTodo setTodoForm={setTodoForm} setTodos={setTodos} />}
       {editForm && (
-        <div className="fixed flex inset-0 bg-black/40  items-center justify-center">
-          <EditTodo
-            setEditForm={setEditForm}
-            setTodos={setTodos}
-            selectedTodo={selectedTodo}
-            todos={todos}
-          />
-        </div>
+        <EditTodo
+          setEditForm={setEditForm}
+          setTodos={setTodos}
+          selectedTodo={selectedTodo}
+          todos={todos}
+        />
       )}
       <div className="m-auto w-96  gap-5 flex flex-col text-center ">
         {todos.length == 0 && userName ? (
@@ -157,33 +158,20 @@ const Home = () => {
         ) : todos.length !== 0 && userName ? (
           <div></div>
         ) : (
-          <h2>Enter to your profile first!</h2>
+          <h2 className={showPulse ? "animate-pulse" : ""}>
+            Enter to your profile first!
+          </h2>
         )}
       </div>
       {todos && todos.length !== 0 && (
-        <div className=" m-auto w-96  gap-5 flex flex-col ">
-          <div className="text-center">
-            <h2>My Todo List</h2>
-          </div>
-          <ul className="flex flex-col gap-3">
-            {todos.map((todo, index) => (
-              <li key={index} className="flex w-full justify-between">
-                <span>{todo}</span>
-                <div className="flex gap-2">
-                  <div onClick={() => handleDeleteTodo(index)}>
-                    <TrashIcon className="w-6 cursor-pointer" />
-                  </div>
-                  <div onClick={() => handleEditTodo(index)}>
-                    <PencilSquareIcon className="w-6" />
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TodoList
+          todos={todos}
+          handleDeleteTodo={handleDeleteTodo}
+          handleEditTodo={handleEditTodo}
+        />
       )}
-      <div className="fixed left-3/4 top-3/4" onClick={handleTodoForm}>
-        <button className="btn btn-circle w-16 h-16 btn-outline text-3xl btn-secondary">
+      <div className="fixed left-3/4 top-3/4 " onClick={handleTodoForm}>
+        <button className="btn btn-circle shadow-fuchsia-800 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] w-16 h-16 btn-outline text-3xl btn-secondary">
           +
         </button>
       </div>
