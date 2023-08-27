@@ -9,6 +9,21 @@
     flex-direction: column;
     gap: 8px;
   }
+  li {
+    cursor: pointer;
+    display: flex;
+    gap: 4px;
+  }
+  li:hover {
+    font-weight: 600;
+  }
 }
 @tailwind components;
 @tailwind utilities;
+@layer utilities {
+  .center {
+    display: flex;
+    position: absolute;
+    left: 500px;
+  }
+}
