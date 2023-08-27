@@ -36,6 +36,7 @@ const Home = () => {
   const [editForm, setEditForm] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(-1);
   const [showPulse, setShowPulse] = useState(false);
+  const [alert, setAlert] = useState(false);
 
   const [randomQuote, setRandomQuote] = useState(
     quotes[Math.floor(Math.random() * quotes.length)]
@@ -96,6 +97,9 @@ const Home = () => {
     setEditForm(true);
   };
 
+  const handleAlert = () => {
+    setAlert(true);
+  };
   return (
     <div className=" flex flex-col gap-5">
       <header className="flex justify-between px-8">
@@ -131,7 +135,7 @@ const Home = () => {
               </li>
 
               {userName && (
-                <li className="text-red-500" onClick={handleLogOut}>
+                <li className="text-red-500" onClick={handleAlert}>
                   <ArrowRightOnRectangleIcon className="w-6" />
                   Logout
                 </li>
@@ -151,6 +155,35 @@ const Home = () => {
           selectedTodo={selectedTodo}
           todos={todos}
         />
+      )}
+      {alert && (
+        <div className="fixed flex inset-0 bg-black/40  items-center justify-center text-gray-900">
+          <motion.form
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.2 }}
+            className="w-96 bg-slate-400 absolute p-10 rounded-2xl gap-3 flex flex-col"
+          >
+            {" "}
+            <h3>
+              Are you sure?<br></br> All todos will be deleted.
+            </h3>
+            <div className="flex w-full justify-center gap-5">
+              <button
+                className="btn btn-success min-w-[90px]"
+                onClick={handleLogOut}
+              >
+                Yes
+              </button>
+              <button
+                className="btn btn-error min-w-[90px]"
+                onClick={handleAlert}
+              >
+                No
+              </button>
+            </div>
+          </motion.form>{" "}
+        </div>
       )}
       <div className="m-auto w-96  gap-5 flex flex-col text-center ">
         {todos.length == 0 && userName ? (

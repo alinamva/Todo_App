@@ -44,6 +44,7 @@ const AddTodo = ({
             <label>
               <input
                 type="text"
+                autoFocus
                 placeholder="Create Todo List"
                 className="input input-bordered input-primary w-full max-w-xs text-gray-100"
                 onChange={(e) => setTodo(e.target.value)}

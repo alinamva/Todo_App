@@ -1,5 +1,6 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Colors from "../constants/Colors";
+import { motion } from "framer-motion";
 
 interface TodoListProps {
   todos: string[];
@@ -21,7 +22,10 @@ const TodoList = ({
         {todos.map((todo, index) => {
           const randomColor = Colors[Math.floor(Math.random() * Colors.length)];
           return (
-            <div
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
               key={index}
               className={`h-10 ${randomColor} p-8 flex items-center justify-center rounded-2xl`}
             >
@@ -40,7 +44,7 @@ const TodoList = ({
                   </div>
                 </div>
               </li>
-            </div>
+            </motion.div>
           );
         })}
       </ul>
